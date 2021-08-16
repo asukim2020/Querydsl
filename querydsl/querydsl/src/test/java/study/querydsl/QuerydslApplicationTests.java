@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
+import study.querydsl.dto.MemberDto;
 import study.querydsl.entity.Hello;
 import study.querydsl.entity.QHello;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -37,6 +40,19 @@ class QuerydslApplicationTests {
 
 		assertThat(result).isEqualTo(hello);
 		assertThat(result.getId()).isEqualTo(hello.getId());
+	}
+
+	@Test
+	public void findDtoByJPQL() {
+		List<MemberDto> result = em.createQuery(
+				"select" +
+						" new study.querydsl.dto.MemberDto(m.username, m.age)" +
+						" from Member m", MemberDto.class)
+				.getResultList();
+
+		for (MemberDto memberDto : result) {
+			System.out.println("memberDto = " + memberDto);
+		}
 	}
 
 }
